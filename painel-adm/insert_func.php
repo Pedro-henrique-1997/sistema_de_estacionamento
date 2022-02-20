@@ -1,5 +1,6 @@
 <?php
 require_once('../conexao.php');
+session_start();
 
 try{
 
@@ -10,16 +11,16 @@ try{
 	$telefone = filter_var($_POST['telefone']);
 	$email = filter_var($_POST['email']);
 
-	$res_c = $pdo->query("SELECT * from funcionarios where email = '$email'");
-		$dados_c = $res_c->fetchAll(PDO::FETCH_ASSOC);
-		$linhas = count($dados_c);
+	$res_c = $pdo->query("SELECT * from funcionarios where email = '$email' AND cpf = '$cpf' ");
+	$dados_c = $res_c->fetchAll(PDO::FETCH_ASSOC);
+	$linhas = count($dados_c);
 
 		//echo $linhas;
 
 
 	if($linhas > 0){
-		echo "Este funcionario já está cadastrado";		
-
+		$_SESSION['msg'] = "<p style='color:red;'>Já existe um funcionario com este cpf ou email no sistema </p>";	
+		header("Location: index.php?acao=funcionarios");
 	}else{
 		
 		$inserir = $pdo->prepare("INSERT INTO funcionarios(nome, especialidade, setor, cpf, telefone, email) VALUES(:nome, :especialidade, :setor, :cpf, :telefone, :email)");
@@ -30,8 +31,11 @@ try{
 		$inserir->bindParam(":telefone", $telefone);
 		$inserir->bindParam(":email", $email);
 		$inserir->execute();
+		
 
+		$_SESSION['msg'] = "<p style='color:green;'>Usuário cadastrado com sucesso</p>";
 		header("Location: index.php?acao=funcionarios");
+		
 	}
 
 	

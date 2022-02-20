@@ -1,4 +1,7 @@
-<?php require_once('../conexao.php') ?>
+<?php require_once('../conexao.php');
+@session_start();
+
+?>
 
 <a href="form_func.php"><button type="button" class="btn btn-primary"> Novo Funcionario</button></a>
 
@@ -13,21 +16,13 @@
 				<option>50</option>
 
 			</select>
+
+      
 			
 		</div>
 	</div>
 
-	<div class="col-md-6 col-sm-12">
-
-		<div class="float-right mr-4">
-			<div class="input-group">
-				<input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-				aria-describedby="search-addon" />
-				<button type="button" class="btn btn-outline-primary" name="<?php echo $item2?>">search</button>
-			</div>
-		</div>
-		
-	</div>
+	<a href="pesquisar_func.php" style="text-align: right;"><button type="button" class="btn btn-primary"> Clique aqui para pesquisar</button></a>
 
 	<table class="table table-bordered">
   <thead>
@@ -46,6 +41,17 @@
     </tr>
   </thead>
   <tbody>
+
+<?php
+    if(isset($_SESSION['msg'])){
+      echo $_SESSION['msg'];
+      unset($_SESSION['msg']);
+
+    }
+
+      ?>
+    
+
   	<?php while($linhas = $ver_funcionarios->fetch(PDO::FETCH_ASSOC)) {
    echo " <tr>
       <th scope='row'>$linhas[nome]</th>
